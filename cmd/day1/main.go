@@ -2,9 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
-	"strconv"
-	"strings"
+	"github.com/solewis/advent-2019/internal/parse"
 )
 
 func main() {
@@ -13,11 +11,10 @@ func main() {
 }
 
 func calculateTotalFuelRequirement(calculator func(int) int) int {
-	masses := parse("cmd/day1/input.txt")
+	masses := parse.Ints("cmd/day1/input.txt", "\n")
 	sum := 0
 	for _, m := range masses {
-		mass, _ := strconv.Atoi(m)
-		sum += calculator(mass)
+		sum += calculator(m)
 	}
 	return sum
 }
@@ -35,12 +32,4 @@ func calculateModuleTotalFuel(mass int) int {
 		}
 		total += mass
 	}
-}
-
-func parse(filename string) []string {
-	dat, err := ioutil.ReadFile(filename)
-	if err != nil {
-		panic(err)
-	}
-	return strings.Split(string(dat), "\n")
 }
