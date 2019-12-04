@@ -19,11 +19,15 @@ func Ints(filename, separator string) []int {
 	}
 	var ints []int
 	for _, l := range strings.Split(string(dat), separator) {
-		i, err := strconv.Atoi(l)
-		check(err)
-		ints = append(ints, i)
+		ints = append(ints, Int(l))
 	}
 	return ints
+}
+
+func Int(s string) int {
+	i, err := strconv.Atoi(s)
+	check(err)
+	return i
 }
 
 func check(err error) {
