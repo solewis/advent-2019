@@ -11,8 +11,13 @@ func main() {
 	in, out := make(chan int), make(chan int)
 	go runIntcodeProgram(program, "part1", in, out)
 	in <- 1
-	p1 := <- out
+	p1 := <-out
 	fmt.Printf("Part 1: %v\n", p1)
+
+	go runIntcodeProgram(program, "part1", in, out)
+	in <- 2
+	p2 := <-out
+	fmt.Printf("Part 2: %v\n", p2)
 }
 
 func runIntcodeProgram(program []int, name string, in, out chan int) {
@@ -34,8 +39,8 @@ func runIntcodeProgram(program []int, name string, in, out chan int) {
 		}
 
 		getWriteAddress := func(paramNum int) int {
-			dest := getFromMemory(ip+paramNum)
-			destMode := getFromMemory(ip) / int(math.Pow10(paramNum + 1)) % 10
+			dest := getFromMemory(ip + paramNum)
+			destMode := getFromMemory(ip) / int(math.Pow10(paramNum+1)) % 10
 			if destMode == 2 {
 				dest += relativeBase
 			}
@@ -43,14 +48,14 @@ func runIntcodeProgram(program []int, name string, in, out chan int) {
 		}
 
 		getValue := func(paramNum int) int {
-			param := getFromMemory(ip+paramNum)
+			param := getFromMemory(ip + paramNum)
 			mode := getFromMemory(ip) / int(math.Pow10(paramNum+1)) % 10
 			if mode == 0 { //position mode
 				return getFromMemory(param)
 			} else if mode == 1 { //immediate mode
 				return param
 			}
-			return getFromMemory(param+relativeBase) //relative mode
+			return getFromMemory(param + relativeBase) //relative mode
 		}
 
 		switch opCode {
