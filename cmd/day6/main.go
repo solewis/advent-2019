@@ -40,24 +40,20 @@ func distanceToSanta(orbitData []string) int {
 	}
 }
 
+func countObjectOrbits(o string, orbitMap map[string]string) int {
+	parent, hasParent := orbitMap[o]
+	if !hasParent {
+		return 0
+	}
+	return 1 + countObjectOrbits(parent, orbitMap)
+}
+
 func countTotalOrbits(orbitData []string) int {
 	orbitMap := buildOrbitMap(orbitData)
 
-	countObjectOrbits := func(o string) int {
-		count := 0
-		for {
-			parent, hasParent := orbitMap[o]
-			if !hasParent {
-				return count
-			}
-			o = parent
-			count++
-		}
-	}
-
 	count := 0
 	for obj := range orbitMap {
-		count += countObjectOrbits(obj)
+		count += countObjectOrbits(obj, orbitMap)
 	}
 	return count
 }
