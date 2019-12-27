@@ -22,7 +22,7 @@ func runVacuum(program []int) int {
 
 	//start program again in movement mode
 	program[0] = 2
-	in, out, done := make(chan int), make(chan int), make(chan int)
+	in, out, done := make(chan int, 100), make(chan int), make(chan int)
 	go runIntcodeProgram(program, in, out, done)
 
 	// figure out by hand...
@@ -31,15 +31,10 @@ func runVacuum(program []int) int {
 	bFunc := "L,8,R,10,R,10,R,6"
 	cFunc := "R,4,R,10,L,12"
 
-	flushOutput(out) //flush the map output
 	inputToRobot(mvmtRoutine, in)
-	flushOutput(out)
 	inputToRobot(aFunc, in)
-	flushOutput(out)
 	inputToRobot(bFunc, in)
-	flushOutput(out)
 	inputToRobot(cFunc, in)
-	flushOutput(out)
 	inputToRobot("n", in) //video feed
 	return flushOutput(out) //flush a the full path that is output afterwards, returning the final value
 }
