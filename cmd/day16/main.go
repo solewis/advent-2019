@@ -26,7 +26,7 @@ func p2(signal string) string {
 	s := buildSlice(fullSignal.String()[offset:])
 	for phase := 0; phase < 100; phase++ {
 		nextSignal := make([]int, len(s))
-		// for all numbers in the final 1/4 of the slice:
+		// for all numbers in the final 1/2 of the slice:
 		//  the multiplier will be all 0 and 1, because of the repeating, so...
 		//	last digit is always equal to previous last digit (because all the other values will be multiply by 0)
 		//	second to last digit is always sum of previous second to last digit and last digit (taking only the 1's value of that sum)
