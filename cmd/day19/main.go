@@ -14,32 +14,27 @@ func main() {
 }
 
 func edgeOfSquare(program []int) point {
-	y := 10 //start at 10 to skip the empty rows
-	for {
-		x := 0
-		firstBeam := 0
-	column:
-		for {
-			p := point{x, y}
-			if firstBeam == 0 {
-				if beingPulled(p, program) {
-					firstBeam = x
-				}
-			} else {
-				if x-firstBeam == 99 { // 100 steps into current beam, check 100 steps up to see if that was also in the beam
-					p2 := point{x, y - 99}
-					if beingPulled(p2, program) {
-						return point{x - 99, y - 99}
-					}
-				}
-				if !beingPulled(p, program) { // end of beam for the given y
-					break column
-				}
-			}
-			x++
+	beamStart := 0
+	for y := 10; true; y++ { // start at 10 to skip the empty rows
+		// find the start of the beam at the given row
+		// know that it must be greater than the start of the previous beam, so start there as the offset
+		beamStart = findBeamStart(y, beamStart, program)
+		bottomRight := point{beamStart + 99, y}
+		topRight := point{beamStart + 99, y - 99}
+		if beingPulled(bottomRight, program) && beingPulled(topRight, program) {
+			return point{beamStart, y - 99}
 		}
-		y++
 	}
+	panic("Can't get here")
+}
+
+// Given the y coordinate and an offset for the x coordinate, find the x coordinate where the beam begins
+func findBeamStart(y, offset int, program []int) int {
+	p := point{offset, y}
+	if beingPulled(p, program) {
+		return offset
+	}
+	return findBeamStart(y, offset+1, program)
 }
 
 type point struct{ x, y int }
